@@ -1,6 +1,7 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel
 
 from utils import Sentiment
 
@@ -9,6 +10,8 @@ import os
 
 app = FastAPI(title="Sentimen API")
 x = os.path.join(os.getcwd(), "public")
+
+app.mount("/public", StaticFiles(directory="public"), name="public")
 
 
 app.add_middleware(
@@ -23,13 +26,6 @@ class SentimentSchema(BaseModel):
     keyword: list[str]
     title: str
     limit: int
-
-
-@app.on_event("shutdown")
-def shutdown_event():
-    for file in os.listdir(x):
-        os.remove(os.path.join(x, file))
-        print(f"File {file} deleted")
 
 
 @app.post("/sentiment")
