@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
 
 from utils import Sentiment
 
@@ -10,6 +11,14 @@ import os
 app = FastAPI(title="Sentimen API")
 model = Sentiment()
 x = os.path.join(os.getcwd(), "public")
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+)
 
 
 class Sentiment(BaseModel):
