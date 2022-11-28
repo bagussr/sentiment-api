@@ -507,7 +507,7 @@ pillow = "*"
 
 [metadata]
 lock-version = "1.1"
-python-versions = "3.10.2"
+python-versions = "3.10.8"
 content-hash = "523827e504c8833f31e301d327c0e9b9a5124751750b7c5da4904ab679fee5ba"
 
 [metadata.files]
