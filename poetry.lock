@@ -234,10 +234,7 @@ optional = false
 python-versions = ">=3.8"
 
 [package.dependencies]
-numpy = [
-    {version = ">=1.21.0", markers = "python_version >= \"3.10\""},
-    {version = ">=1.23.2", markers = "python_version >= \"3.11\""},
-]
+numpy = {version = ">=1.21.0", markers = "python_version >= \"3.10\""}
 python-dateutil = ">=2.8.1"
 pytz = ">=2020.1"
 
@@ -510,8 +507,8 @@ pillow = "*"
 
 [metadata]
 lock-version = "1.1"
-python-versions = "3.10"
-content-hash = "2d3255f8c91457fb6607c18482b862d395a0d1d59ce3f866960a05fb7c1f5554"
+python-versions = "3.10.2"
+content-hash = "523827e504c8833f31e301d327c0e9b9a5124751750b7c5da4904ab679fee5ba"
 
 [metadata.files]
 anyio = [
