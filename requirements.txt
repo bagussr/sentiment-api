@@ -1,0 +1,7 @@
+fastapi==0.88.0
+pandas==1.5.2
+pydantic==1.10.2
+textblob==0.17.1
+tweepy==4.12.1
+uvicorn==0.17.4
+wordcloud==1.8.2.2
