@@ -15,11 +15,11 @@ class Sentiment:
         self.tweets = []
         self.pd = None
 
-    def crawler(self, keyword):
+    def crawler(self, keyword, limit=200):
         self.auth.set_access_token(self.access_token, self.access_token_secret)
         tweets = tweepy.Cursor(
             self.api.search_tweets, q=keyword + "-filter:retweets", lang="id", tweet_mode="extended"
-        ).items(300)
+        ).items(limit)
         for tweet in tweets:
             self.tweets.append(tweet.full_text)
         self.pd = pd.DataFrame(self.tweets, columns=["tweet"])

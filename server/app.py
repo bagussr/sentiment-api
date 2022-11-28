@@ -8,7 +8,6 @@ import os
 
 
 app = FastAPI(title="Sentimen API")
-model = Sentiment()
 x = os.path.join(os.getcwd(), "public")
 
 
@@ -20,9 +19,10 @@ app.add_middleware(
 )
 
 
-class Sentiment(BaseModel):
+class SentimentSchema(BaseModel):
     keyword: list[str]
     title: str
+    limit: int
 
 
 @app.on_event("shutdown")
@@ -33,11 +33,12 @@ def shutdown_event():
 
 
 @app.post("/sentiment")
-def create_sentiment(data: Sentiment):
+def create_sentiment(data: SentimentSchema):
+    model = Sentiment()
     for key in data.keyword:
-        model.crawler(key)
+        model.crawler(key, data.limit)
     model.getSentiment(data.title)
-    return {"data": data}
+    return {"data": os.listdir(x)}
 
 
 @app.get("/")
