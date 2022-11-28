@@ -38,3 +38,8 @@ def create_sentiment(data: Sentiment):
         model.crawler(key)
     model.getSentiment(data.title)
     return {"data": data}
+
+
+@app.get("/")
+def root():
+    return {"message": "Hello World"}
