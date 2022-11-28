@@ -1,9 +1,16 @@
 from textblob import TextBlob
 from wordcloud import WordCloud, STOPWORDS
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
 import tweepy
 import pandas as pd
 import re
 import string
+import nltk
+
+stopwords = stopwords.words("indonesian")
+for x in STOPWORDS:
+    stopwords.append(x)
 
 
 class Sentiment:
@@ -26,6 +33,10 @@ class Sentiment:
             self.tweets.append(tweet.full_text)
         self.pd = pd.DataFrame(self.tweets, columns=["tweet"])
 
+    def tokenize(self):
+        self.pd["tweet"] = self.pd["tweet"].apply(lambda x: word_tokenize(x))
+        self.pd["tweet"] = self.pd["tweet"].apply(lambda x: [item for item in x if item not in stopwords])
+
     def create_wordcloud(self, path, data):
         stopwords = set(STOPWORDS)
         wc = WordCloud(
@@ -38,19 +49,17 @@ class Sentiment:
         wc.generate(data.str.cat(sep=" "))
         wc.to_file(f"public/{path}.png")
 
-    def cleanText(self, text):
-        text = str(text).lower()
-        text = re.sub("rt", "", text)
-        text = re.sub("\[.*?\]", "", text)
-        text = re.sub("https?://\S+|www\.\S+", "", text)
-        text = re.sub("<.*?>+", "", text)
-        text = re.sub("[%s]" % re.escape(string.punctuation), "", text)
-        text = re.sub("\n", "", text)
-        text = re.sub("\w*\d\w*", "", text)
-        text = re.sub(" +", " ", text)
-
     def getSentiment(self, title):
-        self.pd["tweet"].apply(self.cleanText)
+        self.pd["tweet"] = self.pd["tweet"].apply(lambda x: [item for item in x if not re.search(r"\d", item)])
+        self.pd["tweet"] = self.pd["tweet"].apply(lambda x: [item for item in x if not re.search(r"\W", item)])
+        self.pd["tweet"] = self.pd["tweet"].apply(lambda x: [item for item in x if not re.search(r"\_", item)])
+        self.pd["tweet"] = self.pd["tweet"].apply(lambda x: [item for item in x if not re.search(r"\@", item)])
+        self.pd["tweet"] = self.pd["tweet"].apply(lambda x: [item for item in x if not re.search(r"\#", item)])
+        self.pd["tweet"] = self.pd["tweet"].apply(lambda x: [item for item in x if not re.search(r"\$", item)])
+        # remove htpps
+        self.pd["tweet"] = self.pd["tweet"].apply(lambda x: [item for item in x if not re.search(r"http", item)])
+        # join pd['tweet'] to string
+        self.pd["tweet"] = self.pd["tweet"].apply(lambda x: " ".join(x))
         self.pd["subjectivity"] = self.pd["tweet"].apply(self.getSubjectivity)
         self.pd["polarity"] = self.pd["tweet"].apply(self.getPolarity)
         self.pd["sentiment"] = self.pd["polarity"].apply(self.analyze)

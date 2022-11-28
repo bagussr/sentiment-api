@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from utils import Sentiment
 
 import os
+import re
 
 
 app = FastAPI(title="Sentimen API")
@@ -30,9 +31,12 @@ class SentimentSchema(BaseModel):
 
 @app.post("/sentiment")
 def create_sentiment(data: SentimentSchema):
+    for file in os.listdir(x):
+        os.remove(os.path.join(x, file))
     model = Sentiment()
     for key in data.keyword:
         model.crawler(key, data.limit)
+    model.tokenize()
     model.getSentiment(data.title)
     return {"data": os.listdir(x)}
 
