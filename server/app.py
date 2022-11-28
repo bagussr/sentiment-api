@@ -4,7 +4,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from utils import Sentiment
 
-import uvicorn
 import os
 
 
@@ -39,7 +38,3 @@ def create_sentiment(data: Sentiment):
         model.crawler(key)
     model.getSentiment(data.title)
     return {"data": data}
-
-
-if __name__ == "__main__":
-    uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)
